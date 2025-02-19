@@ -81,11 +81,4 @@ After applying the configuration, Terraform will output:
 - **Private Subnet IDs**
 - **Internet Gateway ID**
 
-## License
-
-This project is open-source and can be modified as needed.
-
----
-
-Feel free to update this `README.md` file based on your project needs! 🚀
 
