@@ -21,7 +21,7 @@ resource "aws_subnet" "public_subnet" {
   }
 }
 
-resource "aws_subnet "private_subnet" {
+resource "aws_subnet" "private_subnet" {
   count = length(var.private_subnets)
 
   vpc_id            = aws_vpc.main.id
@@ -33,7 +33,7 @@ resource "aws_subnet "private_subnet" {
   }
 }
 
-resource "aws_internet_gateway "gw" {
+resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 
   tags = {
