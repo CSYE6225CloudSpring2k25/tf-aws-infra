@@ -73,3 +73,66 @@ resource "aws_route_table_association" "private_assoc" {
   subnet_id      = aws_subnet.private_subnet[count.index].id
   route_table_id = aws_route_table.private_rt.id
 }
+
+resource "aws_security_group" "app_sg" {
+  name        = "${var.project_name}-sg"
+  description = "Security group for web application"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = var.app_port
+    to_port     = var.app_port
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.project_name}-sg"
+  }
+}
+
+resource "aws_instance" "app_instance" {
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public_subnet[0].id
+  vpc_security_group_ids      = [aws_security_group.app_sg.id]
+  associate_public_ip_address = true
+
+  root_block_device {
+    volume_size           = 25
+    volume_type           = "gp2"
+    delete_on_termination = true
+  }
+
+  tags = {
+    Name = "${var.project_name}-webapp-ec2-instance"
+  }
+}

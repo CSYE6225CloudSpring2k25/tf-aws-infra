@@ -13,3 +13,7 @@ output "private_subnets" {
 output "internet_gateway_id" {
   value = aws_internet_gateway.gw.id
 }
+
+output "app_instance_public_ip" {
+  value = aws_instance.app_instance.public_ip
+}
