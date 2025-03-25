@@ -199,6 +199,25 @@ resource "aws_iam_role_policy" "s3_policy" {
   })
 }
 
+resource "aws_iam_role_policy" "cloudwatch_policy" {
+  role = aws_iam_role.ec2_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "cloudwatch:PutMetricData"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "${var.project_name}-ec2-profile"
   role = aws_iam_role.ec2_role.name
@@ -256,6 +275,7 @@ resource "aws_instance" "app_instance" {
     echo "NODE_ENV=production" >> /opt/csye6225/webapp/.env
     sudo chown csye6225:csye6225 /opt/csye6225/webapp/.env
     sudo chmod 600 /opt/csye6225/webapp/.env
+    sudo /opt/amazon/cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/amazon/cloudwatch-agent/etc/amazon-cloudwatch-agent.json
   EOF
 
   tags = {
