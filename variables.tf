@@ -65,3 +65,18 @@ variable "DB_NAME" {
   type    = string
   default = "HealthChecks"
 }
+
+variable "key_name" {
+  description = "Name of the SSH key pair for EC2 instances"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment (dev or demo)"
+  type        = string
+}
+
+variable "zone_id" {
+  description = "hosted zone ID"
+  type        = string
+}
