@@ -462,6 +462,7 @@ resource "aws_lb_target_group" "app_tg" {
   health_check {
     path                = "/healthz"
     port                = var.app_port
+    matcher             = "200"
     protocol            = "HTTP"
     healthy_threshold   = 2
     unhealthy_threshold = 2
